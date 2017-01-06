@@ -11,7 +11,7 @@ mouseMove( int x, int y )
 
     if(displayMain == NULL)
     {
-        fprintf(stderr, "Errore nell'apertura del Display !!!\n");
+        std::cerr << "Error Display !" << std::endl;
         exit(EXIT_FAILURE);
     }
 

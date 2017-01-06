@@ -1,0 +1,15 @@
+Projet LeapMouse
+
+Objectif : Controller la souris avec le LeapMotion
+
+Fait:
+-Deplacement basique
+
+A Faire:
+-Integrer le trayIcon
+-Gesture (click, zoom...)
+-Mode de debug
+
+Idee:
+
+Probleme:
