@@ -1,4 +1,5 @@
-#include "systray.hpp"
+#include "Systray.hpp"
+#include "Mouse.hpp"
 #include <Leap.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -6,19 +7,6 @@
 #include <unistd.h>
 
 using namespace Leap;
-
-void mouseMove(int x, int y) {
-  Display *displayMain = XOpenDisplay(NULL);
-
-  if (displayMain == NULL) {
-    fprintf(stderr, "Errore nell'apertura del Display !!!\n");
-    exit(EXIT_FAILURE);
-  }
-
-  XWarpPointer(displayMain, None, None, 0, 0, 0, 0, x, y);
-
-  XCloseDisplay(displayMain);
-}
 
 int main(int argc, char const *argv[]) {
   double x;

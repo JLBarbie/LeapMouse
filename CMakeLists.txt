@@ -6,7 +6,7 @@ set(SRCS
     src/main.cpp
     src/Leap.cpp
     src/Mouse.cpp
-    src/systray.cpp
+    src/Systray.cpp
 )
 
 message("-- Find packages")
@@ -20,10 +20,16 @@ if(GTK2_FOUND)
    target_link_libraries(leapmotion ${GTK2_LIBRARIES})
 endif()
 
-find_package(Leap)
+find_package(Leap REQUIRED)
 if(LEAP_FOUND)
    include_directories(${LEAP_INCLUDE_DIRS})
    target_link_libraries(leapmotion ${LEAP_LIBRARIES})
+endif()
+
+find_package(X11 REQUIRED)
+if(X11_FOUND)
+   include_directories(${X11_INCLUDE_DIRS})
+   target_link_libraries(leapmotion ${X11_LIBRARIES})
 endif()
 
 

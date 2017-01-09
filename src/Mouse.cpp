@@ -1,10 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-
+#include <iostream>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-void 
+#include "Mouse.hpp"
+
+void
 mouseMove( int x, int y )
 {
     Display *displayMain = XOpenDisplay(NULL);
@@ -20,9 +20,8 @@ mouseMove( int x, int y )
     XCloseDisplay(displayMain);
 }
 
-int 
-main( void ) {
-	mouseMove(40, 40);
-	return (0);
-}
-
+// int
+// main( void ) {
+// 	mouseMove(40, 40);
+// 	return (0);
+// }

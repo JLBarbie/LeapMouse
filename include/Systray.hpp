@@ -1,10 +1,10 @@
 #include <gtk-2.0/gtk/gtk.h>
 
-class systray {
+class Systray {
 public:
-  systray();
+  Systray(int argc, char **argv);
 
-  ~systray();
+  ~Systray();
 
   void tray_icon_on_click(GtkStatusIcon *status_icon, gpointer user_data);
 
@@ -12,5 +12,5 @@ public:
                          guint activate_time, gpointer user_data);
 
 private:
-  GtkStatusIcon *systray::create_tray_icon();
+  GtkStatusIcon *create_tray_icon();
 };

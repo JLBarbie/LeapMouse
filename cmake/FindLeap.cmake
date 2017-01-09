@@ -1,93 +1,80 @@
-#.rst
-# FindLeap
-# ------------
+# Find Leap
 #
-# Created by Walter Gray.
-# Locate and configure Leap
+# Finds the libraries and header files for the Leap SDK for Leap Motion's
+# hand tracker.
 #
-# Interface Targets
-# ^^^^^^^^^^^^^^^^^
-#   Leap::Leap
+# This module defines
+# LEAP_FOUND       - Leap was found
+# LEAP_INCLUDE_DIR - Directory containing LEAP header files
+# LEAP_LIBRARY     - Library name of Leap library
+# LEAP_INCLUDE_DIRS- Directories required by CMake convention
+# LEAP_LIBRARIES   - Libraries required by CMake convention
 #
-# Variables
-# ^^^^^^^^^
-#   Leap_ROOT_DIR
-#   Leap_FOUND
-#   Leap_INCLUDE_DIR
-#   Leap_LIBRARY
-#   Leap_IMPORT_LIB
-#   Leap_BUILD_LIBRARIES use ${Leap_BUILD_LIBRARIES} in target_link_libraries command.
-#   Leap_64_BIT - Auto detects 64-bit, turn to OFF if you want to disable.
+# Based on the FindFMODEX.cmake of Team Pantheon.
 
-find_path(Leap_ROOT_DIR
-          NAMES include/Leap.h
-          HINTS ${EXTERNAL_LIBRARY_DIR}
-          PATH_SUFFIXES LeapSDK-${Leap_FIND_VERSION}
-                        LeapSDK)
-#we should check the version.txt file here...
-set(Leap_INCLUDE_DIR "${Leap_ROOT_DIR}/include" )
-# default to x86
-set(_bit_suffix x86)
-math(EXPR BITS "8*${CMAKE_SIZEOF_VOID_P}")
-# always check if they change an option to compile as different target.
-if(BITS EQUAL 64 OR Leap_64_BIT)
-    option(Leap_64_BIT "" ON) # make sure the option is always displayed.
-    if(Leap_64_BIT)
-        set(_bit_suffix x64)
-    endif()
-else()
-    option(Leap_64_BIT "" OFF)
-endif()
+# Don't be verbose if previously run successfully
+IF(LEAP_INCLUDE_DIR AND LEAP_LIBRARY)
+    SET(LEAP_FIND_QUIETLY TRUE)
+ENDIF(LEAP_INCLUDE_DIR AND LEAP_LIBRARY)
 
-set(LeapFinds)
-if(MSVC)
+# Set locations to search
+IF(UNIX)
+    SET(LEAP_INCLUDE_SEARCH_DIRS
+        /usr/include
+        /usr/local/include
+        /opt/leap/include
+        /opt/leap_sdk/include
+        /opt/include INTERNAL)
+    SET(LEAP_LIBRARY_SEARCH_DIRS
+        /usr/lib
+        /usr/lib64
+        /usr/local/lib
+        /usr/local/lib64
+        /opt/leap/lib
+        /opt/leap/lib64
+        /opt/leap_sdk/lib
+        /opt/leap_sdk/lib64 INTERNAL)
+    SET(LEAP_INC_DIR_SUFFIXES PATH_SUFFIXES leap)
+ELSE(UNIX)
+    #WIN32
+    SET(LEAP_INC_DIR_SUFFIXES PATH_SUFFIXES inc)
+    SET(LEAP_LIB_DIR_SUFFIXES PATH_SUFFIXES lib)
+ENDIF(UNIX)
 
-  find_library(Leap_IMPORT_LIB_RELEASE "Leap.lib" HINTS "${Leap_ROOT_DIR}/lib/${_bit_suffix}")
-  find_library(Leap_IMPORT_LIB_DEBUG "Leap.lib" HINTS "${Leap_ROOT_DIR}/lib/${_bit_suffix}")
+# Set name of the Leap library to use
+IF(APPLE)
+    SET(LEAP_LIBRARY_NAME libLeap.dylib)
+ELSE(APPLE)
+    IF(UNIX)
+        SET(LEAP_LIBRARY_NAME libLeap.so)
+    ELSE(UNIX)
+        # TODO Different libraries are provided for compile and runtime
+        SET(LEAP_LIBRARY_NAME libLeap.lib)
+    ENDIF(UNIX)
+ENDIF(APPLE)
 
-  set(Leap_BUILD_LIBRARIES optimized ${Leap_IMPORT_LIB_RELEASE}
-                            debug ${Leap_IMPORT_LIB_DEBUG} CACHE STRING "Leap libraries to build against.")
-  find_file(Leap_LIBRARY_RELEASE
-            NAMES Leap.dll
-            HINTS "${Leap_ROOT_DIR}/lib/${_bit_suffix}")
-  find_file(Leap_LIBRARY_DEBUG
-            NAMES Leapd.dll
-                  Leap.dll #fallback on the release library if we must
-            HINTS "${Leap_ROOT_DIR}/lib/${_bit_suffix}")
-  mark_as_advanced(Leap_IMPORT_LIB_RELEASE Leap_IMPORT_LIB_DEBUG)
+IF(NOT LEAP_FIND_QUIETLY)
+    MESSAGE(STATUS "Checking for Leap")
+ENDIF(NOT LEAP_FIND_QUIETLY)
 
-  set(LeapFinds
-  Leap_IMPORT_LIB_RELEASE
-  Leap_IMPORT_LIB_DEBUG
-  Leap_LIBRARY_RELEASE
-  Leap_LIBRARY_DEBUG)
+# Search for header files
+FIND_PATH(LEAP_INCLUDE_DIR Leap.h
+    PATHS ${LEAP_INCLUDE_SEARCH_PATHS}
+    PATH_SUFFIXES ${LEAP_INC_DIR_SUFFIXES})
 
-else()
-  string(FIND "${CMAKE_CXX_FLAGS}" "-stdlib=libc++" found_lib)
+# Search for library
+FIND_LIBRARY(LEAP_LIBRARY ${LEAP_LIBRARY_NAME}
+    PATHS ${LEAP_LIBRARY_SEARCH_DIRS}
+    PATH_SUFFIXES ${LEAP_LIB_DIR_SUFFIXES})
 
-  if(${found_lib} GREATER -1)
-    set(_libdir ${Leap_ROOT_DIR}/lib)
-  else()
-    message(WARNING "Could not locate the library directory")
-  endif()
+SET(LEAP_INCLUDE_DIR ${LEAP_INCLUDE_DIR} CACHE STRING
+    "Directory containing LEAP header files")
+SET(LEAP_LIBRARY ${LEAP_LIBRARY} CACHE STRING "Library name of Leap library")
 
-  find_library(Leap_LIBRARY_RELEASE
-            NAMES libLeap.dylib
-            HINTS "${_libdir}")
-  find_library(Leap_LIBRARY_DEBUG
-            NAMES libLeapd.dylib
-                  libLeap.dylib #fallback on the release library
-            HINTS "${_libdir}")
-  set(Leap_BUILD_LIBRARIES optimized ${Leap_LIBRARY_RELEASE}
-      debug ${Leap_LIBRARY_DEBUG} CACHE STRING "Leap libraries to build againsts.")
-  set(LeapFinds
-  Leap_LIBRARY_RELEASE
-  Leap_LIBRARY_DEBUG)
-endif()
+SET(LEAP_INCLUDE_DIRS ${LEAP_INCLUDE_DIR} )
+SET(LEAP_LIBRARIES ${LEAP_LIBRARY} )
 
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(Leap DEFAULT_MSG LEAP_LIBRARY LEAP_INCLUDE_DIR)
 
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Leap DEFAULT_MSG Leap_ROOT_DIR Leap_INCLUDE_DIR ${LeapFinds})
-
-include(CreateImportTargetHelpers)
-generate_import_target(Leap SHARED)
+MARK_AS_ADVANCED(LEAP_INCLUDE_DIR LEAP_LIBRARY)
