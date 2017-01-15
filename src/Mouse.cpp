@@ -19,9 +19,3 @@ mouseMove( int x, int y )
 
     XCloseDisplay(displayMain);
 }
-
-// int
-// main( void ) {
-// 	mouseMove(40, 40);
-// 	return (0);
-// }

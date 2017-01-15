@@ -1,3 +1,6 @@
+#ifndef SYSTRAY_HPP
+#define SYSTRAY_HPP
+
 #include <gtk-2.0/gtk/gtk.h>
 
 class Systray {
@@ -14,3 +17,5 @@ public:
 private:
   GtkStatusIcon *create_tray_icon();
 };
+
+#endif
