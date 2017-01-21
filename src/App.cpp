@@ -3,6 +3,7 @@
 #include "Mouse.hpp"
 
 App::App () {
+    this->controller = Leap::Controller();
     this->check();
 }
 
@@ -11,8 +12,9 @@ App::~App () {
 }
 
 void App::check() {
+    sleep(5);
     if(this->controller.isConnected()) {
-        std::cout << "[ \033[34mDONE\033[0m ] Connected" << std::endl;
+        std::cout << "[ \033[32mDONE\033[0m ] Connected" << std::endl;
         this->loop();
     } else {
         Util::printError("Leap Motion not connected");
