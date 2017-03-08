@@ -2,6 +2,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
+#include "Utils.hpp"
 #include "Mouse.hpp"
 
 void
@@ -11,7 +12,7 @@ mouseMove( int x, int y )
 
     if(displayMain == NULL)
     {
-        std::cerr << "Error Display !" << std::endl;
+        printError("Could'nt open display");
         exit(EXIT_FAILURE);
     }
 

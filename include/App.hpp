@@ -2,11 +2,11 @@
 #define APP_HPP
 
 #include <Leap.h>
-#include "Util.hpp"
 
-class App
-{
+class App {
     Leap::Controller controller;
+    double x;
+    double y;
 
 public:
     App();
@@ -14,6 +14,10 @@ public:
 
     void loop();
     void check();
+
+private:
+    void getCoordX(Leap::Vector);
+    void getCoordY(Leap::Vector);
 };
 
 #endif
