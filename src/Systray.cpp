@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Systray.hpp"
+#include "Utils.hpp"
 
 Systray::Systray(int argc, char **argv) {
   GtkStatusIcon *tray_icon;
@@ -13,14 +14,14 @@ Systray::~Systray() {}
 
 void Systray::tray_icon_on_click(GtkStatusIcon *status_icon,
                                  gpointer user_data) {
-  std::cout << "Clicked on tray icon" << std::endl;
+  printDebug("Clicked on tray icon");
 }
 
 void Systray::tray_icon_on_menu(GtkStatusIcon *status_icon,
                                 guint button,
                                 guint activate_time,
                                 gpointer user_data) {
-  std::cout << "Popup menu" << std::endl;
+  printDebug("Popup menu");
 }
 
 GtkStatusIcon *Systray::create_tray_icon() {

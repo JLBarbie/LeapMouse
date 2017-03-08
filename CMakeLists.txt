@@ -4,7 +4,8 @@ include_directories (include)
 
 set(SRCS
     src/main.cpp
-    src/Leap.cpp
+    src/App.cpp
+    src/Utils.cpp
     src/Mouse.cpp
     src/Systray.cpp
 )
