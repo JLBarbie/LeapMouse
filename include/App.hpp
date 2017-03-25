@@ -16,6 +16,7 @@ public:
     void check();
 
 private:
+    void checkGesture( );
     void getCoordX(Leap::Vector);
     void getCoordY(Leap::Vector);
 };
